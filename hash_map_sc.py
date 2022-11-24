@@ -90,18 +90,41 @@ class HashMap:
 
     def put(self, key: str, value: object) -> None:
         """
-        Updates the key/value pair in the hash map. If the given key exists, then value is replaced by new value.
+        Updates the key/value pair in the hash map.
+        If the given key exists, then associated value is replaced by new value.
         If given key is not in the hash map, a new key/value pair must be added.
         The table is resized to double its current capacity when current load factor is >= 1.0.
         """
-        if hash_function_1(key) % self._capacity <= self._buckets.length():
-            print('hit')
+        # Double the size of current capacity when load factor is >= 1.0
+        if self.table_load() > 1.0:
+            self._capacity *= 2
+
+        # This passes the key through a hash function and spits out the corresponding key in the buckets.
+        hash_key = self._hash_function(key) % self._capacity
+
+        # Storing the corresponding bucket into a variable to be used later.
+        chain_key = self._buckets.get_at_index(hash_key)
+
+        # # If a given key exists, then an associated value is replaced.
+        # if chain_key.length() > 0:
+        #     chain_key.__iter__().__next__().value = value
+        # # If it does not exist, then create new key/value pair and increase size by 1.
+        # else:
+        #     chain_key.insert(key, value)
+        #     self._size += 1
+
+        chain_key.insert(key, value)
+        self._size += 1
 
     def empty_buckets(self) -> int:
         """
         Returns the number of empty buckets in the hash table.
         """
-        pass
+        c = 0
+        for i in range(self._capacity):
+            if self._buckets.get_at_index(i).length() == 0:
+                c += 1
+        return c
 
     def table_load(self) -> float:
         """
@@ -115,28 +138,57 @@ class HashMap:
         """
         Clears the contents of the hash map. It does not change the underlying hash table capacity.
         """
+        self = HashMap(self._capacity)
 
     def resize_table(self, new_capacity: int) -> None:
         """
-        Changes the capacity of the internal hash table. All existing key/value pairs must remain in the
-        new hash map, and all hash table links must be rehashed.
+        Changes the capacity of the internal hash table.
+        All existing key/value pairs must remain in the new hash map, and all hash table links are rehashed.
         It first checks that new_capacity is not less than 1. If it is, then it does nothing.
         If new_capacity >= 1, it makes sure that it is a prime number. If not, then it will round up to the
         next highest prime number.
         """
-        pass
+        if new_capacity >= 1:
+            cap = self._capacity
+            self._capacity = self._next_prime(new_capacity)
+            newHash = HashMap(self._capacity)
+
+            for i in range(cap):
+                if self._buckets.get_at_index(i).length() > 0:
+                    bucket = self._buckets.get_at_index(i)
+                    hash_key = self._hash_function(bucket.__iter__().__next__().key) % self._capacity
+                    newHash._buckets.get_at_index(i).insert(hash_key, bucket.__iter__().__next__().value)
+                else:
+                    newHash._buckets.append(LinkedList())
+
+            self = newHash
 
     def get(self, key: str):
         """
         Returns the value associated with given key. If key is not in the hash map, return None.
         """
-        pass
+        # This passes the key through a hash function and spits out the corresponding key in the buckets.
+        hash_key = self._hash_function(key) % self._capacity
+
+        # Storing the corresponding bucket into a variable to be used later.
+        chain_key = self._buckets.get_at_index(hash_key)
+
+        if chain_key.length() == 0:
+            return None
+        else:
+            return chain_key.__iter__().__next__().value
 
     def contains_key(self, key: str) -> bool:
         """
         Returns True if given key is in the hash map, otherwise returns False.
         An empty hash map does not contain any keys.
         """
+        for i in range(self._capacity):
+            bucket = self._buckets.get_at_index(i)
+            if bucket.length() > 0:
+                if bucket.length() > 0 and bucket.__iter__().__next__().key == key:
+                    return True
+        return False
 
     def remove(self, key: str) -> None:
         """
@@ -176,13 +228,19 @@ def find_mode(da: DynamicArray) -> (DynamicArray, int):
 
 if __name__ == "__main__":
 
-    print("\nPDF - put example 1")
-    print("-------------------")
-    m = HashMap(53, hash_function_1)
-    for i in range(150):
-        m.put('str' + str(i), i * 100)
-        if i % 25 == 24:
-            print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
+    # print("\nPDF - put example 1")
+    # print("-------------------")
+    # m = HashMap(53, hash_function_1)
+    # for i in range(150):
+    #     m.put('str' + str(i), i * 100)
+    #     if i % 25 == 24:
+    #         print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
+
+    # print("\nPDF - put example 3333")
+    # print("-------------------")
+    # m = HashMap(20, hash_function_1)
+    # m.put('key1', 10)
+    # print(m)
 
     # print("\nPDF - put example 2")
     # print("-------------------")
@@ -191,7 +249,7 @@ if __name__ == "__main__":
     #     m.put('str' + str(i // 3), i * 100)
     #     if i % 10 == 9:
     #         print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-
+    #
     # print("\nPDF - empty_buckets example 1")
     # print("-----------------------------")
     # m = HashMap(101, hash_function_1)
@@ -204,7 +262,7 @@ if __name__ == "__main__":
     # print(m.empty_buckets(), m.get_size(), m.get_capacity())
     # m.put('key4', 40)
     # print(m.empty_buckets(), m.get_size(), m.get_capacity())
-
+    #
     # print("\nPDF - empty_buckets example 2")
     # print("-----------------------------")
     # m = HashMap(53, hash_function_1)
@@ -212,7 +270,7 @@ if __name__ == "__main__":
     #     m.put('key' + str(i), i * 100)
     #     if i % 30 == 0:
     #         print(m.empty_buckets(), m.get_size(), m.get_capacity())
-
+    #
     # print("\nPDF - table_load example 1")
     # print("--------------------------")
     # m = HashMap(101, hash_function_1)
@@ -255,14 +313,14 @@ if __name__ == "__main__":
     # print(m.get_size(), m.get_capacity())
     # m.clear()
     # print(m.get_size(), m.get_capacity())
-    #
-    # print("\nPDF - resize example 1")
-    # print("----------------------")
-    # m = HashMap(23, hash_function_1)
-    # m.put('key1', 10)
-    # print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
-    # m.resize_table(30)
-    # print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
+
+    print("\nPDF - resize example 1")
+    print("----------------------")
+    m = HashMap(23, hash_function_1)
+    m.put('key1', 10)
+    print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
+    m.resize_table(30)
+    print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
     #
     # print("\nPDF - resize example 2")
     # print("----------------------")
@@ -292,7 +350,7 @@ if __name__ == "__main__":
     # print(m.get('key'))
     # m.put('key1', 10)
     # print(m.get('key1'))
-    #
+    # #
     # print("\nPDF - get example 2")
     # print("-------------------")
     # m = HashMap(151, hash_function_2)
@@ -302,7 +360,7 @@ if __name__ == "__main__":
     # for i in range(200, 300, 21):
     #     print(i, m.get(str(i)), m.get(str(i)) == i * 10)
     #     print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
-    #
+
     # print("\nPDF - contains_key example 1")
     # print("----------------------------")
     # m = HashMap(53, hash_function_1)
