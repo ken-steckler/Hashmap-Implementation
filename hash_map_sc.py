@@ -105,16 +105,6 @@ class HashMap:
         # Storing the corresponding bucket into a variable to be used later.
         chain_key = self._buckets.get_at_index(hash_key)
 
-        # # If a given key exists, then an associated value is replaced.
-        # if chain_key.length() > 0:
-        #     chain_key.__iter__().__next__().value = value
-        # # If it does not exist, then create new key/value pair and increase size by 1.
-        # else:
-        #     chain_key.insert(key, value)
-        #     self._size += 1
-
-        chain_key.insert(key, value)
-        self._size += 1
 
     def empty_buckets(self) -> int:
         """
@@ -139,6 +129,7 @@ class HashMap:
         Clears the contents of the hash map. It does not change the underlying hash table capacity.
         """
         self = HashMap(self._capacity)
+        self._size = 0
 
     def resize_table(self, new_capacity: int) -> None:
         """
