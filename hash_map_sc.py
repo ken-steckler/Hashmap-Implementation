@@ -117,7 +117,6 @@ class HashMap:
 
         # if load factor is greater than 1.0, then resize
         if self.table_load() >= 1.0:
-            # resize by doubling current capacity when current load factor is > 1.0
             self.resize_table(self._capacity * 2)
 
     def empty_buckets(self) -> int:
