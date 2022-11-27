@@ -113,11 +113,10 @@ class HashMap:
             self._size += 1
         else:
             # iterate through the linked list and check if the same key exists. If it does then do nothing
+            node = chain_key.__iter__()
             for i in range(chain_key.length()):
-                if chain_key.__iter__().__next__().key == key:
-                    # If an existing key is found, then remove the key from the list
+                if node.__next__().key == key:
                     chain_key.remove(key)
-                    # Then add the key into the list with its new corresponding value
                     chain_key.insert(key, value)
                     return
                 if i == chain_key.length() - 1:
@@ -149,8 +148,8 @@ class HashMap:
         new_table = HashMap(self._capacity)
         # https://stackoverflow.com/questions/1216356/is-it-safe-to-replace-a-self-object-by-another-object-of-the-same-type-in-a-meth
         # Safely replacing the old self with the new table
-        self.__dict__.update(new_table.__dict__)
         self._size = 0
+        self = new_table
 
     def resize_table(self, new_capacity: int) -> None:
         """
@@ -184,6 +183,7 @@ class HashMap:
         # https://stackoverflow.com/questions/1216356/is-it-safe-to-replace-a-self-object-by-another-object-of-the-same-type-in-a-meth
         # Safely replacing the old self with the new table
         self.__dict__.update(new_table.__dict__)
+        # self = new_table
 
     def get(self, key: str):
         """
@@ -208,8 +208,10 @@ class HashMap:
         for i in range(self._capacity):
             bucket = self._buckets.get_at_index(i)
             if bucket.length() > 0:
-                if bucket.length() > 0 and bucket.__iter__().__next__().key == key:
-                    return True
+                for _ in range(bucket.length()):
+                    node = bucket.__iter__()
+                    if node.__next__().key == key:
+                        return True
         return False
 
     def remove(self, key: str) -> None:
@@ -234,11 +236,10 @@ class HashMap:
 
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
+                chain_key = self._buckets.get_at_index(i).__iter__()
                 for _ in range(self._buckets.get_at_index(i).length()):
-                    k = self._buckets.get_at_index(i).__iter__().__next__().key
-                    v = self._buckets.get_at_index(i).__iter__().__next__().value
-                    da.append((k, v))
-
+                    node = chain_key.__next__()
+                    da.append((node.key, node.value))
         return da
 
 def find_mode(da: DynamicArray) -> (DynamicArray, int):
@@ -264,22 +265,22 @@ def find_mode(da: DynamicArray) -> (DynamicArray, int):
 
 if __name__ == "__main__":
 
-    print("\nPDF - put example 1")
-    print("-------------------")
-    m = HashMap(53, hash_function_1)
-    for i in range(150):
-        m.put('str' + str(i), i * 100)
-        if i % 25 == 24:
-            print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-
-    print("\nPDF - put example 2")
-    print("-------------------")
-    m = HashMap(41, hash_function_2)
-    for i in range(50):
-        m.put('str' + str(i // 3), i * 100)
-        if i % 10 == 9:
-            print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-
+    # print("\nPDF - put example 1")
+    # print("-------------------")
+    # m = HashMap(53, hash_function_1)
+    # for i in range(150):
+    #     m.put('str' + str(i), i * 100)
+    #     if i % 25 == 24:
+    #         print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
+    # #
+    # print("\nPDF - put example 2")
+    # print("-------------------")
+    # m = HashMap(41, hash_function_2)
+    # for i in range(50):
+    #     m.put('str' + str(i // 3), i * 100)
+    #     if i % 10 == 9:
+    #         print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
+    # 
     # print("\nPDF - empty_buckets example 1")
     # print("-----------------------------")
     # m = HashMap(101, hash_function_1)
@@ -292,7 +293,7 @@ if __name__ == "__main__":
     # print(m.empty_buckets(), m.get_size(), m.get_capacity())
     # m.put('key4', 40)
     # print(m.empty_buckets(), m.get_size(), m.get_capacity())
-    #
+    # 
     # print("\nPDF - empty_buckets example 2")
     # print("-----------------------------")
     # m = HashMap(53, hash_function_1)
@@ -300,7 +301,7 @@ if __name__ == "__main__":
     #     m.put('key' + str(i), i * 100)
     #     if i % 30 == 0:
     #         print(m.empty_buckets(), m.get_size(), m.get_capacity())
-
+    # 
     # print("\nPDF - table_load example 1")
     # print("--------------------------")
     # m = HashMap(101, hash_function_1)
@@ -311,7 +312,7 @@ if __name__ == "__main__":
     # print(round(m.table_load(), 2))
     # m.put('key1', 30)
     # print(round(m.table_load(), 2))
-    #
+    # 
     # print("\nPDF - table_load example 2")
     # print("--------------------------")
     # m = HashMap(53, hash_function_1)
@@ -319,7 +320,7 @@ if __name__ == "__main__":
     #     m.put('key' + str(i), i * 100)
     #     if i % 10 == 0:
     #         print(round(m.table_load(), 2), m.get_size(), m.get_capacity())
-    #
+    # 
     # print("\nPDF - clear example 1")
     # print("---------------------")
     # m = HashMap(101, hash_function_1)
@@ -330,7 +331,7 @@ if __name__ == "__main__":
     # print(m.get_size(), m.get_capacity())
     # m.clear()
     # print(m.get_size(), m.get_capacity())
-    #
+    # 
     # print("\nPDF - clear example 2")
     # print("---------------------")
     # m = HashMap(53, hash_function_1)
@@ -381,15 +382,15 @@ if __name__ == "__main__":
     # m.put('key1', 10)
     # print(m.get('key1'))
     #
-    print("\nPDF - get example 2")
-    print("-------------------")
-    m = HashMap(151, hash_function_2)
-    for i in range(200, 300, 7):
-        m.put(str(i), i * 10)
-    print(m.get_size(), m.get_capacity())
-    for i in range(200, 300, 21):
-        print(i, m.get(str(i)), m.get(str(i)) == i * 10)
-        print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
+    # print("\nPDF - get example 2")
+    # print("-------------------")
+    # m = HashMap(151, hash_function_2)
+    # for i in range(200, 300, 7):
+    #     m.put(str(i), i * 10)
+    # print(m.get_size(), m.get_capacity())
+    # for i in range(200, 300, 21):
+    #     print(i, m.get(str(i)), m.get(str(i)) == i * 10)
+    #     print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
 
     # print("\nPDF - contains_key example 1")
     # print("----------------------------")
@@ -404,7 +405,7 @@ if __name__ == "__main__":
     # print(m.contains_key('key3'))
     # m.remove('key3')
     # print(m.contains_key('key3'))
-    #
+    # #
     # print("\nPDF - contains_key example 2")
     # print("----------------------------")
     # m = HashMap(79, hash_function_2)
@@ -430,18 +431,21 @@ if __name__ == "__main__":
     # print(m.get('key1'))
     # m.remove('key4')
     # #
-    print("\nPDF - get_keys_and_values example 1")
-    print("------------------------")
-    m = HashMap(11, hash_function_2)
-    for i in range(1, 6):
-        m.put(str(i), str(i * 10))
-    print(m.get_keys_and_values())
-    m.put('20', '200')
-    m.remove('1')
-    m.resize_table(2)
-    print(m)
-
-    print(m.get_keys_and_values())
+    # print("\nPDF - get_keys_and_values example 1")
+    # print("------------------------")
+    # m = HashMap(11, hash_function_2)
+    # for i in range(1, 6):
+    #     m.put(str(i), str(i * 10))
+    # print(m.get_keys_and_values())
+    # m.put('20', '200')
+    # m.remove('1')
+    # print('BEFORE resize')
+    # print(m)
+    # m.resize_table(2)
+    # print('AFTER resize')
+    # print(m)
+    #
+    # print(m.get_keys_and_values())
     #
     # print("\nPDF - find_mode example 1")
     # print("-----------------------------")
