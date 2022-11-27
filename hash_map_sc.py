@@ -95,16 +95,8 @@ class HashMap:
         If given key is not in the hash map, a new key/value pair must be added.
         The table is resized to double its current capacity when current load factor is >= 1.0.
         """
-        # This passes the key through a hash function and spits out the corresponding key in the buckets.
         hash_key = self._hash_function(key) % self._capacity
-
-        # Storing the corresponding bucket into a variable to be used later.
         chain_key = self._buckets.get_at_index(hash_key)
-
-        # if load factor is greater than 1.0, then resize
-        if self.table_load() >= 1.0:
-            # resize by doubling current capacity when current load factor is >= 1.0
-            self.resize_table(self._capacity * 2)
 
         # If the key in the hash map does not yet exist, then simply add the key to the corresponding bucket
         # and its value, which will be a linked list node.
@@ -122,6 +114,11 @@ class HashMap:
                 if i == chain_key.length() - 1:
                     chain_key.insert(key, value)
                     self._size += 1
+
+        # if load factor is greater than 1.0, then resize
+        if self.table_load() >= 1.0:
+            # resize by doubling current capacity when current load factor is >= 1.0
+            self.resize_table(self._capacity * 2)
 
     def empty_buckets(self) -> int:
         """
