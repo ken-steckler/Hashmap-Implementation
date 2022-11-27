@@ -95,6 +95,11 @@ class HashMap:
         If given key is not in the hash map, a new key/value pair must be added.
         The table is resized to double its current capacity when current load factor is >= 1.0.
         """
+        # For this hash map implementation, the table must be resized to double its current capacity
+        # when this method is called and the current load factor of the table is greater than or equal to 1.0.
+        if self.table_load() >= 1.0:
+            self.resize_table(self._capacity * 2)
+
         hash_key = self._hash_function(key) % self._capacity
         chain_key = self._buckets.get_at_index(hash_key)
 
@@ -111,13 +116,8 @@ class HashMap:
                     chain_key.remove(key)
                     chain_key.insert(key, value)
                     return
-                if i == chain_key.length() - 1:
-                    chain_key.insert(key, value)
-                    self._size += 1
-
-        # if load factor is greater than 1.0, then resize
-        if self.table_load() >= 1.0:
-            self.resize_table(self._capacity * 2)
+            chain_key.insert(key, value)
+            self._size += 1
 
     def empty_buckets(self) -> int:
         """
@@ -270,7 +270,8 @@ if __name__ == "__main__":
     m = HashMap(53, hash_function_1)
     for i in range(150):
         m.put('str' + str(i), i * 100)
-        if i % 25 == 24:
+        # if i % 25 == 24:
+        if m.get_size() == 52 or m.get_size() == 53 or m.get_size() == 54:
             print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
 
     # print("\nPDF - put example 2")
@@ -280,7 +281,7 @@ if __name__ == "__main__":
     #     m.put('str' + str(i // 3), i * 100)
     #     if i % 10 == 9:
     #         print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-    #
+
     # print("\nPDF - empty_buckets example 1")
     # print("-----------------------------")
     # m = HashMap(101, hash_function_1)
@@ -332,18 +333,18 @@ if __name__ == "__main__":
     # m.clear()
     # print(m.get_size(), m.get_capacity())
     #
-    print("\nPDF - clear example 2")
-    print("---------------------")
-    m = HashMap(53, hash_function_1)
-    print(m.get_size(), m.get_capacity())
-    m.put('key1', 10)
-    print(m.get_size(), m.get_capacity())
-    m.put('key2', 20)
-    print(m.get_size(), m.get_capacity())
-    m.resize_table(100)
-    print(m.get_size(), m.get_capacity())
-    m.clear()
-    print(m.get_size(), m.get_capacity())
+    # print("\nPDF - clear example 2")
+    # print("---------------------")
+    # m = HashMap(53, hash_function_1)
+    # print(m.get_size(), m.get_capacity())
+    # m.put('key1', 10)
+    # print(m.get_size(), m.get_capacity())
+    # m.put('key2', 20)
+    # print(m.get_size(), m.get_capacity())
+    # m.resize_table(100)
+    # print(m.get_size(), m.get_capacity())
+    # m.clear()
+    # print(m.get_size(), m.get_capacity())
     #
     # print("\nPDF - resize example 1")
     # print("----------------------")
