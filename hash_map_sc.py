@@ -117,7 +117,7 @@ class HashMap:
 
         # if load factor is greater than 1.0, then resize
         if self.table_load() >= 1.0:
-            # resize by doubling current capacity when current load factor is >= 1.0
+            # resize by doubling current capacity when current load factor is > 1.0
             self.resize_table(self._capacity * 2)
 
     def empty_buckets(self) -> int:
@@ -143,8 +143,6 @@ class HashMap:
         Clears the contents of the hash map. It does not change the underlying hash table capacity.
         """
         new_table = HashMap(self._capacity)
-        # https://stackoverflow.com/questions/1216356/is-it-safe-to-replace-a-self-object-by-another-object-of-the-same-type-in-a-meth
-        # Safely replacing the old self with the new table
         self._size = 0
         self = new_table
 
@@ -174,7 +172,6 @@ class HashMap:
                 for _ in range(self._buckets.get_at_index(i).length()):
                     node = chain_key.__next__()
                     new_table.put(node.key, node.value)
-
 
         # Once the copying is done, then set self to the new table that was created
         # https://stackoverflow.com/questions/1216356/is-it-safe-to-replace-a-self-object-by-another-object-of-the-same-type-in-a-meth
@@ -268,14 +265,14 @@ def find_mode(da: DynamicArray) -> (DynamicArray, int):
 
 if __name__ == "__main__":
 
-    # print("\nPDF - put example 1")
-    # print("-------------------")
-    # m = HashMap(53, hash_function_1)
-    # for i in range(150):
-    #     m.put('str' + str(i), i * 100)
-    #     if i % 25 == 24:
-    #         print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-    #
+    print("\nPDF - put example 1")
+    print("-------------------")
+    m = HashMap(53, hash_function_1)
+    for i in range(150):
+        m.put('str' + str(i), i * 100)
+        if i % 25 == 24:
+            print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
+
     # print("\nPDF - put example 2")
     # print("-------------------")
     # m = HashMap(41, hash_function_2)
@@ -434,18 +431,18 @@ if __name__ == "__main__":
     # print(m.get('key1'))
     # m.remove('key4')
     # #
-    print("\nPDF - get_keys_and_values example 1")
-    print("------------------------")
-    m = HashMap(11, hash_function_2)
-    for i in range(1, 6):
-        m.put(str(i), str(i * 10))
-    print(m.get_keys_and_values())
-    m.put('20', '200')
-    m.remove('1')
-    m.resize_table(2)
-
-
-    print(m.get_keys_and_values())
+    # print("\nPDF - get_keys_and_values example 1")
+    # print("------------------------")
+    # m = HashMap(11, hash_function_2)
+    # for i in range(1, 6):
+    #     m.put(str(i), str(i * 10))
+    # print(m.get_keys_and_values())
+    # m.put('20', '200')
+    # m.remove('1')
+    # m.resize_table(2)
+    #
+    #
+    # print(m.get_keys_and_values())
 
     # print("\nPDF - find_mode example 1")
     # print("-----------------------------")
