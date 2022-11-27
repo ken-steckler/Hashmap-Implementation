@@ -141,9 +141,8 @@ class HashMap:
         """
         Clears the contents of the hash map. It does not change the underlying hash table capacity.
         """
-        new_table = HashMap(self._capacity)
+        self._buckets = DynamicArray()
         self._size = 0
-        self = new_table
 
     def resize_table(self, new_capacity: int) -> None:
         """
@@ -331,18 +330,18 @@ if __name__ == "__main__":
     # m.clear()
     # print(m.get_size(), m.get_capacity())
     #
-    # print("\nPDF - clear example 2")
-    # print("---------------------")
-    # m = HashMap(53, hash_function_1)
-    # print(m.get_size(), m.get_capacity())
-    # m.put('key1', 10)
-    # print(m.get_size(), m.get_capacity())
-    # m.put('key2', 20)
-    # print(m.get_size(), m.get_capacity())
-    # m.resize_table(100)
-    # print(m.get_size(), m.get_capacity())
-    # m.clear()
-    # print(m.get_size(), m.get_capacity())
+    print("\nPDF - clear example 2")
+    print("---------------------")
+    m = HashMap(53, hash_function_1)
+    print(m.get_size(), m.get_capacity())
+    m.put('key1', 10)
+    print(m.get_size(), m.get_capacity())
+    m.put('key2', 20)
+    print(m.get_size(), m.get_capacity())
+    m.resize_table(100)
+    print(m.get_size(), m.get_capacity())
+    m.clear()
+    print(m.get_size(), m.get_capacity())
     #
     # print("\nPDF - resize example 1")
     # print("----------------------")
