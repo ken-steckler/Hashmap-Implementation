@@ -157,9 +157,8 @@ class HashMap:
         # First, check if new_capacity is less than 1. If it is then do nothing
         if new_capacity < 1:
             return
-
         # A check for a new capacity with a prime number size
-        if not self._is_prime(new_capacity):
+        if self._is_prime(new_capacity) is not True:
             new_capacity = self._next_prime(new_capacity)
 
         # First, create a new Hashmap with the new capacity
@@ -201,6 +200,8 @@ class HashMap:
                     if next.key == key:
                         return next.value
 
+        return None
+
     def contains_key(self, key: str) -> bool:
         """
         Returns True if given key is in the hash map, otherwise returns False.
@@ -221,9 +222,9 @@ class HashMap:
         """
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
+                n = self._buckets.get_at_index(i).__iter__()
                 for _ in range(self._buckets.get_at_index(i).length()):
-                    n = self._buckets.get_at_index(i).__iter__().__next__()
-                    if n.key == key:
+                    if n.__next__().key == key:
                         self._buckets.get_at_index(i).remove(key)
                         self._size -= 1
 
@@ -240,6 +241,7 @@ class HashMap:
                 for _ in range(self._buckets.get_at_index(i).length()):
                     node = chain_key.__next__()
                     da.append((node.key, node.value))
+        print(self)
         return da
 
 def find_mode(da: DynamicArray) -> (DynamicArray, int):
@@ -259,21 +261,34 @@ def find_mode(da: DynamicArray) -> (DynamicArray, int):
     # if you'd like to use a hash map,
     # use this instance of your Separate Chaining HashMap
     map = HashMap()
+    mode = None
+    frequency = 0
+    arr = DynamicArray()
+    for i in range(da.length()):
+        if map.contains_key(da.get_at_index(i)):
+            map.put(da.get_at_index(i), map.get(da.get_at_index(i)) + 1)
+        else:
+            map.put(da.get_at_index(i), 1)
+
+    l = map.get_keys_and_values()
+    for i in range(map.get_size()):
+        pass
+
+    return arr, frequency
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
 
 if __name__ == "__main__":
 
-    print("\nPDF - put example 1")
-    print("-------------------")
-    m = HashMap(53, hash_function_1)
-    for i in range(150):
-        m.put('str' + str(i), i * 100)
-        # if i % 25 == 24:
-        if m.get_size() == 52 or m.get_size() == 53 or m.get_size() == 54:
-            print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-
+    # print("\nPDF - put example 1")
+    # print("-------------------")
+    # m = HashMap(53, hash_function_1)
+    # for i in range(150):
+    #     m.put('str' + str(i), i * 100)
+    #     if i % 25 == 24:
+    #         print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
+    #
     # print("\nPDF - put example 2")
     # print("-------------------")
     # m = HashMap(41, hash_function_2)
@@ -281,7 +296,7 @@ if __name__ == "__main__":
     #     m.put('str' + str(i // 3), i * 100)
     #     if i % 10 == 9:
     #         print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-
+    #
     # print("\nPDF - empty_buckets example 1")
     # print("-----------------------------")
     # m = HashMap(101, hash_function_1)
@@ -375,7 +390,7 @@ if __name__ == "__main__":
     #         # NOT inserted keys must be absent
     #         result &= not m.contains_key(str(key + 1))
     #     print(capacity, result, m.get_size(), m.get_capacity(), round(m.table_load(), 2))
-
+    #
     # print("\nPDF - get example 1")
     # print("-------------------")
     # m = HashMap(31, hash_function_1)
@@ -422,16 +437,16 @@ if __name__ == "__main__":
     #     result &= not m.contains_key(str(key + 1))
     # print(result)
     #
-    # print("\nPDF - remove example 1")
-    # print("----------------------")
-    # m = HashMap(53, hash_function_1)
-    # print(m.get('key1'))
-    # m.put('key1', 10)
-    # print(m.get('key1'))
-    # m.remove('key1')
-    # print(m.get('key1'))
-    # m.remove('key4')
-    # #
+    print("\nPDF - remove example 1")
+    print("----------------------")
+    m = HashMap(53, hash_function_1)
+    print(m.get('key1'))
+    m.put('key1', 10)
+    print(m.get('key1'))
+    m.remove('key1')
+    print(m.get('key1'))
+    m.remove('key4')
+    #
     # print("\nPDF - get_keys_and_values example 1")
     # print("------------------------")
     # m = HashMap(11, hash_function_2)
@@ -441,10 +456,9 @@ if __name__ == "__main__":
     # m.put('20', '200')
     # m.remove('1')
     # m.resize_table(2)
-    #
-    #
     # print(m.get_keys_and_values())
-
+    # print("EXPECTED: ", [('2', '20'), ('3', '30'), ('20', '200'), ('4', '40'), ('5', '50')])
+    #
     # print("\nPDF - find_mode example 1")
     # print("-----------------------------")
     # da = DynamicArray(["apple", "apple", "grape", "melon", "peach"])
