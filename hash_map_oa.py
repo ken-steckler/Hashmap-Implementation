@@ -94,17 +94,23 @@ class HashMap:
         Table is resized to double its current capacity when the method is called
         and the current load factor of the table is >= 0.5
         """
-        # Quadratic probing: i = iinitial + j^2
-        hash = self._hash_function(key)
-        if self._buckets.get_at_index(hash) is None:
-            self._buckets.set_at_index(hash, value)
+        hash_key = self._hash_function(key) % self._capacity
+        # Quadratic Probing: hash_key + j^2
+
+        if self.table_load() >= 0.5:
+            print(self._buckets)
+            self.resize_table(self._capacity * 2)
+
+        if self._buckets.get_at_index(hash_key) is None:
+            self._buckets.set_at_index(hash_key, HashEntry(key, value))
             self._size += 1
-        elif hash == key and self._buckets.get_at_index(hash) is not None:
-            c = 1
-            # use quadratic probing
-            while hash == key and self._buckets.get_at_index(hash) is not None:
-                hash = hash + c ** 2
-            self._buckets.set_at_index(hash, value)
+
+        else:
+            c = 0
+            while hash_key <= self._capacity and self._buckets.get_at_index(hash_key):
+                hash_key = (hash_key + c**2) % self._capacity
+                c += 1
+            self._buckets.set_at_index(hash_key, HashEntry(key, value))
             self._size += 1
 
     def table_load(self) -> float:
@@ -124,28 +130,41 @@ class HashMap:
         Changes the capacity of the internal hash table.
         All existing key/value pairs remain in the new hash map and all hash table
         links are rehashed.
-        First checks if new_capacity is not less than the current number of elements
-        in the hash map. If so, the method does nothing.
-        Otherwise, it checks if new_capacity is a prime number. If not, it rounds
-        up to the nearest prime number.
+        new_capacity must be > current number of elements in the hash map. If not, the method does nothing.
+        Checks if new_capacity is a prime number. If not, it rounds up to the nearest prime number.
         """
-        pass
+        if new_capacity < self._size:
+            return
+
+        if not self._is_prime(new_capacity):
+            new_capacity = self._next_prime(new_capacity)
+
+        new_array = HashMap(new_capacity, self._hash_function)
+
+        for i in range(self._capacity):
+            if self._buckets.get_at_index(i):
+                pair = self._buckets.get_at_index(i)
+                new_array.put(pair.key, HashEntry(pair.key, pair.value))
 
     def get(self, key: str) -> object:
         """
         Returns the value associated with the given key. If the key is not in the hash
         map, then the method returns None.
         """
-        pass
-        # hash = self._hash_function(key)
-        # return self._buckets.get_at_index(hash)
+        hash_key = self._hash_function(key) % self._capacity
+        if self._buckets.get_at_index(hash_key):
+            return self._buckets.get_at_index(hash_key)
+        return None
 
     def contains_key(self, key: str) -> bool:
         """
         Returns True if given key  is in the hash map, otherwise returns False.
         An empty hash map does not contain any keys.
         """
-        pass
+        hash_key = self._hash_function(key) % self._capacity
+        if self._buckets.get_at_index(hash_key):
+            return True
+        return False
 
     def remove(self, key: str) -> None:
         """
@@ -160,7 +179,8 @@ class HashMap:
         Clears the contents of the hash map. It does not change the underlying
         hash table capacity.
         """
-        pass
+        self._buckets = DynamicArray(self._capacity)
+        self._size = 0
 
     def get_keys_and_values(self) -> DynamicArray:
         """
@@ -190,13 +210,13 @@ class HashMap:
 
 if __name__ == "__main__":
 
-    # print("\nPDF - put example 1")
-    # print("-------------------")
-    # m = HashMap(53, hash_function_1)
-    # for i in range(150):
-    #     m.put('str' + str(i), i * 100)
-    #     if i % 25 == 24:
-    #         print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
+    print("\nPDF - put example 1")
+    print("-------------------")
+    m = HashMap(53, hash_function_1)
+    for i in range(150):
+        m.put('str' + str(i), i * 100)
+        if i % 25 == 24:
+            print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
     #
     # print("\nPDF - put example 2")
     # print("-------------------")
@@ -280,22 +300,22 @@ if __name__ == "__main__":
     #         result &= not m.contains_key(str(key + 1))
     #     print(capacity, result, m.get_size(), m.get_capacity(), round(m.table_load(), 2))
 
-    print("\nPDF - get example 1")
-    print("-------------------")
-    m = HashMap(31, hash_function_1)
-    print(m.get('key'))
-    m.put('key1', 10)
-    print(m.get('key1'))
-
-    print("\nPDF - get example 2")
-    print("-------------------")
-    m = HashMap(151, hash_function_2)
-    for i in range(200, 300, 7):
-        m.put(str(i), i * 10)
-    print(m.get_size(), m.get_capacity())
-    for i in range(200, 300, 21):
-        print(i, m.get(str(i)), m.get(str(i)) == i * 10)
-        print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
+    # print("\nPDF - get example 1")
+    # print("-------------------")
+    # m = HashMap(31, hash_function_1)
+    # print(m.get('key'))
+    # m.put('key1', 10)
+    # print(m.get('key1'))
+    #
+    # print("\nPDF - get example 2")
+    # print("-------------------")
+    # m = HashMap(151, hash_function_2)
+    # for i in range(200, 300, 7):
+    #     m.put(str(i), i * 10)
+    # print(m.get_size(), m.get_capacity())
+    # for i in range(200, 300, 21):
+    #     print(i, m.get(str(i)), m.get(str(i)) == i * 10)
+    #     print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
     #
     # print("\nPDF - contains_key example 1")
     # print("----------------------------")
