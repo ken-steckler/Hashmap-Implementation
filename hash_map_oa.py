@@ -106,7 +106,7 @@ class HashMap:
             self._size += 1
 
         else:
-            c = 0
+            c = 1
             while self._buckets.get_at_index(hash_key):
                 hash_key = (hash_key + c*c) % self._capacity
                 c += 1
