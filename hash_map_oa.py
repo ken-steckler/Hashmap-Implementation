@@ -172,7 +172,8 @@ class HashMap:
         """
         hash_key = self._hash_function(key) % self._capacity
         if self._buckets.get_at_index(hash_key) and not self._buckets.get_at_index(hash_key).is_tombstone:
-            return True
+            if self._buckets.get_at_index(hash_key) == key:
+                return True
         return False
 
     def remove(self, key: str) -> None:
@@ -347,7 +348,7 @@ if __name__ == "__main__":
     # for i in range(200, 300, 21):
     #     print(i, m.get(str(i)), m.get(str(i)) == i * 10)
     #     print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
-
+    #
     # print("\nPDF - contains_key example 1")
     # print("----------------------------")
     # m = HashMap(11, hash_function_1)
@@ -361,21 +362,21 @@ if __name__ == "__main__":
     # print(m.contains_key('key3'))
     # m.remove('key3')
     # print(m.contains_key('key3'))
-    #
-    # print("\nPDF - contains_key example 2")
-    # print("----------------------------")
-    # m = HashMap(79, hash_function_2)
-    # keys = [i for i in range(1, 1000, 20)]
-    # for key in keys:
-    #     m.put(str(key), key * 42)
-    # print(m.get_size(), m.get_capacity())
-    # result = True
-    # for key in keys:
-    #     # all inserted keys must be present
-    #     result &= m.contains_key(str(key))
-    #     # NOT inserted keys must be absent
-    #     result &= not m.contains_key(str(key + 1))
-    # print(result)
+
+    print("\nPDF - contains_key example 2")
+    print("----------------------------")
+    m = HashMap(79, hash_function_2)
+    keys = [i for i in range(1, 1000, 20)]
+    for key in keys:
+        m.put(str(key), key * 42)
+    print(m.get_size(), m.get_capacity())
+    result = True
+    for key in keys:
+        # all inserted keys must be present
+        result &= m.contains_key(str(key))
+        # NOT inserted keys must be absent
+        result &= not m.contains_key(str(key + 1))
+    print(result)
     #
     # print("\nPDF - remove example 1")
     # print("----------------------")
@@ -411,20 +412,20 @@ if __name__ == "__main__":
     # m.clear()
     # print(m.get_size(), m.get_capacity())
 
-    print("\nPDF - get_keys_and_values example 1")
-    print("------------------------")
-    m = HashMap(11, hash_function_2)
-    for i in range(1, 6):
-        m.put(str(i), str(i * 10))
-    print(m.get_keys_and_values())
-
-    m.resize_table(2)
-    print(m.get_keys_and_values())
-
-    m.put('20', '200')
-    m.remove('1')
-    m.resize_table(12)
-    print(m.get_keys_and_values())
+    # print("\nPDF - get_keys_and_values example 1")
+    # print("------------------------")
+    # m = HashMap(11, hash_function_2)
+    # for i in range(1, 6):
+    #     m.put(str(i), str(i * 10))
+    # print(m.get_keys_and_values())
+    #
+    # m.resize_table(2)
+    # print(m.get_keys_and_values())
+    #
+    # m.put('20', '200')
+    # m.remove('1')
+    # m.resize_table(12)
+    # print(m.get_keys_and_values())
 
     # print("\nPDF - __iter__(), __next__() example 1")
     # print("---------------------")
