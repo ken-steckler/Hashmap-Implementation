@@ -108,7 +108,7 @@ class HashMap:
         else:
             c = 1
             while self._buckets.get_at_index(hash_key):
-                hash_key = (hash_key + c*c) % self._capacity
+                hash_key = (hash_key + c*2) % self._capacity
                 c += 1
 
             self._buckets.set_at_index(hash_key, HashEntry(key, value))
