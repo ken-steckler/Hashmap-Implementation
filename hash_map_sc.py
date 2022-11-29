@@ -98,7 +98,6 @@ class HashMap:
         # For this hash map implementation, the table must be resized to double its current capacity
         # when this method is called and the current load factor of the table is greater than or equal to 1.0.
         if self.table_load() >= 1.0:
-            print(self._capacity)
             self.resize_table(self._capacity * 2)
 
         hash_key = self._hash_function(key) % self._capacity

@@ -94,25 +94,24 @@ class HashMap:
         Table is resized to double its current capacity when the method is called
         and the current load factor of the table is >= 0.5
         """
-        hash_key = self._hash_function(key) % self._capacity
-        # Quadratic Probing: hash_key + j^2
-
+        # If table load is greater than or equal to 0.5 then resize table
         if self.table_load() >= 0.5:
-            print(self._buckets)
             self.resize_table(self._capacity * 2)
 
+        hash_key = self._hash_function(key) % self._capacity
+
+        # if the bucket does not contain a key and value then simply insert the key value pair and increment size
         if self._buckets.get_at_index(hash_key) is None:
             self._buckets.set_at_index(hash_key, HashEntry(key, value))
             self._size += 1
 
         else:
             c = 0
-            # fix this
-            while hash_key <= self._capacity and self._buckets.get_at_index(hash_key):
-                hash_key = (hash_key + c**2) % self._capacity
-                c += 1
-            self._buckets.set_at_index(hash_key, HashEntry(key, value))
-            self._size += 1
+        #     while self._buckets.get_at_index(hash_key):
+        #         c += 1
+        #         hash_key = (hash_key + c*c) % self._capacity
+        #     self._buckets.set_at_index(hash_key, HashEntry(key, value))
+        #     self._size += 1
 
     def table_load(self) -> float:
         """
@@ -140,12 +139,15 @@ class HashMap:
         if not self._is_prime(new_capacity):
             new_capacity = self._next_prime(new_capacity)
 
+        # Creating a new HashMap object with the new capacity
         new_array = HashMap(new_capacity, self._hash_function)
 
         for i in range(self._capacity):
             if self._buckets.get_at_index(i):
                 pair = self._buckets.get_at_index(i)
-                new_array.put(pair.key, HashEntry(pair.key, pair.value))
+                new_array.put(pair.key, pair.value)
+
+        self.__dict__.update(new_array.__dict__)
 
     def get(self, key: str) -> object:
         """
@@ -153,8 +155,8 @@ class HashMap:
         map, then the method returns None.
         """
         hash_key = self._hash_function(key) % self._capacity
-        if self._buckets.get_at_index(hash_key):
-            return self._buckets.get_at_index(hash_key)
+        if self._buckets.get_at_index(hash_key) and not self._buckets.get_at_index(hash_key).is_tombstone:
+            return self._buckets.get_at_index(hash_key).value
         return None
 
     def contains_key(self, key: str) -> bool:
@@ -163,7 +165,7 @@ class HashMap:
         An empty hash map does not contain any keys.
         """
         hash_key = self._hash_function(key) % self._capacity
-        if self._buckets.get_at_index(hash_key):
+        if self._buckets.get_at_index(hash_key) and not self._buckets.get_at_index(hash_key).is_tombstone:
             return True
         return False
 
@@ -173,14 +175,18 @@ class HashMap:
         If the key is not in the hash map, the method does nothing (no exceptions
         is raised)
         """
-        pass
+        hash_key = self._hash_function(key) % self._capacity
+        for i in range(self._capacity):
+            if self._buckets.get_at_index(i):
+                if self._buckets.get_at_index(i).key == key:
+                    self._buckets.get_at_index(i).is_tombstone = True
 
     def clear(self) -> None:
         """
         Clears the contents of the hash map. It does not change the underlying
         hash table capacity.
         """
-        self._buckets = DynamicArray(self._capacity)
+        self._buckets = DynamicArray()
         self._size = 0
 
     def get_keys_and_values(self) -> DynamicArray:
@@ -197,27 +203,36 @@ class HashMap:
         A variable is initialized to track the iterator's progress
         through the hash map's contents.
         """
-        pass
+        self.index = 0
+        return self
 
     def __next__(self):
         """
         This method returns item n the hash map, based on the current location of
         the iterator.
         """
-        pass
+        try:
+            value = None
+            while value is None or value.is_tombstone is True:
+                value = self._buckets.get_at_index(self.index)
+                self.index += 1
+        except DynamicArrayException:
+            raise StopIteration
+
+        return value
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
 
 if __name__ == "__main__":
-
-    print("\nPDF - put example 1")
-    print("-------------------")
-    m = HashMap(53, hash_function_1)
-    for i in range(150):
-        m.put('str' + str(i), i * 100)
-        if i % 25 == 24:
-            print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
+    #
+    # print("\nPDF - put example 1")
+    # print("-------------------")
+    # m = HashMap(53, hash_function_1)
+    # for i in range(150):
+    #     m.put('str' + str(i), i * 100)
+    #     if i % 25 == 24:
+    #         print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
     #
     # print("\nPDF - put example 2")
     # print("-------------------")
@@ -267,14 +282,14 @@ if __name__ == "__main__":
     #     if i % 30 == 0:
     #         print(m.empty_buckets(), m.get_size(), m.get_capacity())
     #
-    # print("\nPDF - resize example 1")
-    # print("----------------------")
-    # m = HashMap(23, hash_function_1)
-    # m.put('key1', 10)
-    # print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
-    # m.resize_table(30)
-    # print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
-    #
+    print("\nPDF - resize example 1")
+    print("----------------------")
+    m = HashMap(23, hash_function_1)
+    m.put('key1', 10)
+    print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
+    m.resize_table(30)
+    print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
+
     # print("\nPDF - resize example 2")
     # print("----------------------")
     # m = HashMap(79, hash_function_2)
@@ -380,7 +395,7 @@ if __name__ == "__main__":
     # print(m.get_size(), m.get_capacity())
     # m.clear()
     # print(m.get_size(), m.get_capacity())
-    #
+
     # print("\nPDF - get_keys_and_values example 1")
     # print("------------------------")
     # m = HashMap(11, hash_function_2)
@@ -395,7 +410,7 @@ if __name__ == "__main__":
     # m.remove('1')
     # m.resize_table(12)
     # print(m.get_keys_and_values())
-    #
+
     # print("\nPDF - __iter__(), __next__() example 1")
     # print("---------------------")
     # m = HashMap(10, hash_function_1)
