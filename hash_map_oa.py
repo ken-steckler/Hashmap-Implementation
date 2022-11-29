@@ -106,12 +106,13 @@ class HashMap:
             self._size += 1
 
         else:
-            c = 1
-            while self._buckets.get_at_index(hash_key):
-                hash_key = (hash_key + c*2) % self._capacity
-                c += 1
+            j = 1
+            quad_key = hash_key
+            while self._buckets.get_at_index(quad_key):
+                quad_key = (hash_key + j**2) % self._capacity
+                j += 1
 
-            self._buckets.set_at_index(hash_key, HashEntry(key, value))
+            self._buckets.set_at_index(quad_key, HashEntry(key, value))
             self._size += 1
 
     def table_load(self) -> float:
