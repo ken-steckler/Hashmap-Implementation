@@ -207,7 +207,7 @@ class HashMap:
         arr = DynamicArray()
 
         for i in range(self._capacity):
-            if self._buckets.get_at_index(i):
+            if self._buckets.get_at_index(i) and not self._buckets.get_at_index(i).is_tombstone:
                 arr.append((self._buckets.get_at_index(i).key, self._buckets.get_at_index(i).value))
 
         return arr
