@@ -109,6 +109,8 @@ class HashMap:
             j = 1
             quad_key = hash_key
             while self._buckets.get_at_index(quad_key):
+                if self._buckets.get_at_index(quad_key).key == key:
+                    break
                 quad_key = (hash_key + j**2) % self._capacity
                 j += 1
 
