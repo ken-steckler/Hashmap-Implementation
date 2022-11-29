@@ -193,10 +193,10 @@ class HashMap:
         Clears the contents of the hash map. It does not change the underlying
         hash table capacity.
         """
-        new_hash = HashMap(self._capacity, self._hash_function)
-        new_hash._buckets = DynamicArray()
-        new_hash._size = 0
-        self.__dict__.update(new_hash.__dict__)
+        self._buckets = DynamicArray()
+        for _ in range(self._capacity):
+            self._buckets.append(None)
+        self._size = 0
 
     def get_keys_and_values(self) -> DynamicArray:
         """
