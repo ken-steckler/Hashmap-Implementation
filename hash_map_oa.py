@@ -172,7 +172,7 @@ class HashMap:
         """
         hash_key = self._hash_function(key) % self._capacity
         if self._buckets.get_at_index(hash_key) and not self._buckets.get_at_index(hash_key).is_tombstone:
-            if self._buckets.get_at_index(hash_key) == key:
+            if self._buckets.get_at_index(hash_key).key == key:
                 return True
         return False
 
@@ -349,19 +349,19 @@ if __name__ == "__main__":
     #     print(i, m.get(str(i)), m.get(str(i)) == i * 10)
     #     print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
     #
-    # print("\nPDF - contains_key example 1")
-    # print("----------------------------")
-    # m = HashMap(11, hash_function_1)
-    # print(m.contains_key('key1'))
-    # m.put('key1', 10)
-    # m.put('key2', 20)
-    # m.put('key3', 30)
-    # print(m.contains_key('key1'))
-    # print(m.contains_key('key4'))
-    # print(m.contains_key('key2'))
-    # print(m.contains_key('key3'))
-    # m.remove('key3')
-    # print(m.contains_key('key3'))
+    print("\nPDF - contains_key example 1")
+    print("----------------------------")
+    m = HashMap(11, hash_function_1)
+    print(m.contains_key('key1'))
+    m.put('key1', 10)
+    m.put('key2', 20)
+    m.put('key3', 30)
+    print(m.contains_key('key1'))
+    print(m.contains_key('key4'))
+    print(m.contains_key('key2'))
+    print(m.contains_key('key3'))
+    m.remove('key3')
+    print(m.contains_key('key3'))
 
     print("\nPDF - contains_key example 2")
     print("----------------------------")
