@@ -109,8 +109,10 @@ class HashMap:
             j = 1
             quad_key = hash_key
             while self._buckets.get_at_index(quad_key):
+                # if the key is found in the hash, then replace without incrementing size and return
                 if self._buckets.get_at_index(quad_key).key == key:
-                    break
+                    self._buckets.set_at_index(quad_key, HashEntry(key, value))
+                    return
                 quad_key = (hash_key + j**2) % self._capacity
                 j += 1
 
