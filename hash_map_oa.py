@@ -193,8 +193,10 @@ class HashMap:
         Clears the contents of the hash map. It does not change the underlying
         hash table capacity.
         """
-        self._buckets = DynamicArray()
-        self._size = 0
+        new_hash = HashMap(self._capacity, self._hash_function)
+        new_hash._buckets = DynamicArray()
+        new_hash._size = 0
+        self.__dict__.update(new_hash.__dict__)
 
     def get_keys_and_values(self) -> DynamicArray:
         """
@@ -322,23 +324,23 @@ if __name__ == "__main__":
     #         # NOT inserted keys must be absent
     #         result &= not m.contains_key(str(key + 1))
     #     print(capacity, result, m.get_size(), m.get_capacity(), round(m.table_load(), 2))
-
-    print("\nPDF - get example 1")
-    print("-------------------")
-    m = HashMap(31, hash_function_1)
-    print(m.get('key'))
-    m.put('key1', 10)
-    print(m.get('key1'))
-
-    print("\nPDF - get example 2")
-    print("-------------------")
-    m = HashMap(151, hash_function_2)
-    for i in range(200, 300, 7):
-        m.put(str(i), i * 10)
-    print(m.get_size(), m.get_capacity())
-    for i in range(200, 300, 21):
-        print(i, m.get(str(i)), m.get(str(i)) == i * 10)
-        print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
+    #
+    # print("\nPDF - get example 1")
+    # print("-------------------")
+    # m = HashMap(31, hash_function_1)
+    # print(m.get('key'))
+    # m.put('key1', 10)
+    # print(m.get('key1'))
+    #
+    # print("\nPDF - get example 2")
+    # print("-------------------")
+    # m = HashMap(151, hash_function_2)
+    # for i in range(200, 300, 7):
+    #     m.put(str(i), i * 10)
+    # print(m.get_size(), m.get_capacity())
+    # for i in range(200, 300, 21):
+    #     print(i, m.get(str(i)), m.get(str(i)) == i * 10)
+    #     print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
 
     # print("\nPDF - contains_key example 1")
     # print("----------------------------")
@@ -379,29 +381,29 @@ if __name__ == "__main__":
     # print(m.get('key1'))
     # m.remove('key4')
     #
-    # print("\nPDF - clear example 1")
-    # print("---------------------")
-    # m = HashMap(101, hash_function_1)
-    # print(m.get_size(), m.get_capacity())
-    # m.put('key1', 10)
-    # m.put('key2', 20)
-    # m.put('key1', 30)
-    # print(m.get_size(), m.get_capacity())
-    # m.clear()
-    # print(m.get_size(), m.get_capacity())
-    #
-    # print("\nPDF - clear example 2")
-    # print("---------------------")
-    # m = HashMap(53, hash_function_1)
-    # print(m.get_size(), m.get_capacity())
-    # m.put('key1', 10)
-    # print(m.get_size(), m.get_capacity())
-    # m.put('key2', 20)
-    # print(m.get_size(), m.get_capacity())
-    # m.resize_table(100)
-    # print(m.get_size(), m.get_capacity())
-    # m.clear()
-    # print(m.get_size(), m.get_capacity())
+    print("\nPDF - clear example 1")
+    print("---------------------")
+    m = HashMap(101, hash_function_1)
+    print(m.get_size(), m.get_capacity())
+    m.put('key1', 10)
+    m.put('key2', 20)
+    m.put('key1', 30)
+    print(m.get_size(), m.get_capacity())
+    m.clear()
+    print(m.get_size(), m.get_capacity())
+
+    print("\nPDF - clear example 2")
+    print("---------------------")
+    m = HashMap(53, hash_function_1)
+    print(m.get_size(), m.get_capacity())
+    m.put('key1', 10)
+    print(m.get_size(), m.get_capacity())
+    m.put('key2', 20)
+    print(m.get_size(), m.get_capacity())
+    m.resize_table(100)
+    print(m.get_size(), m.get_capacity())
+    m.clear()
+    print(m.get_size(), m.get_capacity())
 
     # print("\nPDF - get_keys_and_values example 1")
     # print("------------------------")
