@@ -194,14 +194,17 @@ class HashMap:
         if chain_key.length() == 0:
             return None
         else:
-            if chain_key.__iter__().__next__().key == key:
-                return chain_key.__iter__().__next__().value
-            else:
-                node = chain_key.__iter__()
-                for _ in range(chain_key.length()):
-                    next = node.__next__()
-                    if next.key == key:
-                        return next.value
+            for item in self._buckets.get_at_index(hash_key):
+                if item.key == key:
+                    return item.value
+            # if chain_key.__iter__().__next__().key == key:
+            #     return chain_key.__iter__().__next__().value
+            # else:
+            #     node = chain_key.__iter__()
+            #     for _ in range(chain_key.length()):
+            #         next = node.__next__()
+            #         if next.key == key:
+            #             return next.value
 
         return None
 
@@ -432,13 +435,13 @@ if __name__ == "__main__":
     #         result &= not m.contains_key(str(key + 1))
     #     print(capacity, result, m.get_size(), m.get_capacity(), round(m.table_load(), 2))
 
-    # print("\nPDF - get example 1")
-    # print("-------------------")
-    # m = HashMap(31, hash_function_1)
-    # print(m.get('key'))
-    # m.put('key1', 10)
-    # print(m.get('key1'))
-    #
+    print("\nPDF - get example 1")
+    print("-------------------")
+    m = HashMap(31, hash_function_1)
+    print(m.get('key'))
+    m.put('key1', 10)
+    print(m.get('key1'))
+
     # print("\nPDF - get example 2")
     # print("-------------------")
     # m = HashMap(151, hash_function_2)
