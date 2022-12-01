@@ -157,7 +157,9 @@ class HashMap:
                 pair = self._buckets.get_at_index(i)
                 new_array.put(pair.key, pair.value)
 
-        self.__dict__.update(new_array.__dict__)
+        self._buckets = new_array._buckets
+        self._size = new_array._size
+        self._capacity = new_array.get_capacity()
 
     def get(self, key: str) -> object:
         """
