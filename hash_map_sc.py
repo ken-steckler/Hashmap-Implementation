@@ -108,17 +108,11 @@ class HashMap:
             self._size += 1
         else:
             # iterate through the linked list and check if the same key exists. If it does then do nothing
-            # node = chain_key.__iter__()
             for item in chain_key:
                 if item.key == key:
                     chain_key.remove(key)
                     chain_key.insert(key, value)
                     return
-            # for i in range(chain_key.length()):
-            #     if node.__next__().key == key:
-            #         chain_key.remove(key)
-            #         chain_key.insert(key, value)
-            #         return
             chain_key.insert(key, value)
             self._size += 1
 
