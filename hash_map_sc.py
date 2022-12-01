@@ -174,6 +174,7 @@ class HashMap:
                     node = chain_key.__next__()
                     new_table.put(node.key, node.value)
 
+        # Reassigning new values to self
         self._buckets = new_table._buckets
         self._size = new_table._size
         self._capacity = new_table._capacity

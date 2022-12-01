@@ -150,17 +150,22 @@ class HashMap:
         if not self._is_prime(new_capacity):
             new_capacity = self._next_prime(new_capacity)
 
-        new_array = HashMap(new_capacity, self._hash_function)
+        new_table = HashMap(new_capacity, self._hash_function)
+
+        # this is to prevent next_prime from going to 3, when it should stay at 2 (since 2 is prime)
+        if new_capacity == 2:
+            new_table._capacity = 2
 
         # be sure to not add size + 1 if rehashing tombstone values
         for i in range(self._capacity):
             if self._buckets.get_at_index(i):
                 pair = self._buckets.get_at_index(i)
-                new_array.put(pair.key, pair.value)
+                new_table.put(pair.key, pair.value)
 
-        self._buckets = new_array._buckets
-        self._size = new_array._size
-        self._capacity = new_array.get_capacity()
+        # Reassigning new values to self
+        self._buckets = new_table._buckets
+        self._size = new_table._size
+        self._capacity = new_table.get_capacity()
 
     def get(self, key: str) -> object:
         """
