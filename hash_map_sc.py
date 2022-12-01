@@ -95,8 +95,6 @@ class HashMap:
         If given key is not in the hash map, a new key/value pair must be added.
         The table is resized to double its current capacity when current load factor is >= 1.0.
         """
-        # For this hash map implementation, the table must be resized to double its current capacity
-        # when this method is called and the current load factor of the table is greater than or equal to 1.0.
         if self.table_load() >= 1.0:
             self.resize_table(self._capacity * 2)
 
@@ -159,11 +157,15 @@ class HashMap:
             return
 
         # A check for a new capacity with a prime number size
-        if self._is_prime(new_capacity) is not True:
+        if not self._is_prime(new_capacity):
             new_capacity = self._next_prime(new_capacity)
 
         # First, create a new Hashmap with the new capacity
         new_table = HashMap(new_capacity, self._hash_function)
+
+        # this is to prevent next_prime from going to 3, when it should stay at 2 (since 2 is prime)
+        if new_capacity == 2:
+            new_table._capacity = 2
 
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
@@ -172,10 +174,9 @@ class HashMap:
                     node = chain_key.__next__()
                     new_table.put(node.key, node.value)
 
-        # https://stackoverflow.com/questions/1216356/is-it-safe-to-replace-a-self-object-by-another-object-of-the-same-type-in-a-meth
-        # Safely replacing the old self with the new table
-        self.__dict__.update(new_table.__dict__)
-        # self = new_table
+        self._buckets = new_table._buckets
+        self._size = new_table._size
+        self._capacity = new_table._capacity
 
     def get(self, key: str):
         """
@@ -380,46 +381,55 @@ if __name__ == "__main__":
     # m.clear()
     # print(m.get_size(), m.get_capacity())
     #
-    # print("\nPDF - resize example 1")
-    # print("----------------------")
-    # m = HashMap(23, hash_function_1)
-    # m.put('key1', 10)
-    # print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
-    # m.resize_table(30)
-    # print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
+    print("\nPDF - resize example 1")
+    print("----------------------")
+    m = HashMap(23, hash_function_1)
+    m.put('key1', 10)
+    print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
+    m.resize_table(30)
+    print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
 
     print("\nGRADESCOPE - resize example 1")
     print("----------------------")
-    m = HashMap(101, hash_function_2)
-    m.put('key152', 913)
-    m.put('key920', -106)
-    m.put('key642', -714)
-    m.put('key931', -408)
-    m.put('key636', -821)
+    m = HashMap(89, hash_function_2)
+    m.put('key403', 758)
+    m.put('key988', -720)
+    m.put('key49', 134)
+    m.put('key640', -298)
+    m.put('key504', 225)
+    m.put('key353', 570)
+    m.put('key670', 39)
+    m.put('key890', -127)
+    m.put('key504', 225)
+    m.put('key584', 246)
+    m.put('key984', -974)
+
     m.resize_table(2)
     print(m)
 
-    # print("\nPDF - resize example 2")
-    # print("----------------------")
-    # m = HashMap(79, hash_function_2)
-    # keys = [i for i in range(1, 1000, 13)]
-    # for key in keys:
-    #     m.put(str(key), key * 42)
-    # print(m.get_size(), m.get_capacity())
-    #
-    # for capacity in range(111, 1000, 117):
-    #     m.resize_table(capacity)
-    #
-    #     m.put('some key', 'some value')
-    #     result = m.contains_key('some key')
-    #     m.remove('some key')
-    #
-    #     for key in keys:
-    #         # all inserted keys must be present
-    #         result &= m.contains_key(str(key))
-    #         # NOT inserted keys must be absent
-    #         result &= not m.contains_key(str(key + 1))
-    #     print(capacity, result, m.get_size(), m.get_capacity(), round(m.table_load(), 2))
+
+
+    print("\nPDF - resize example 2")
+    print("----------------------")
+    m = HashMap(79, hash_function_2)
+    keys = [i for i in range(1, 1000, 13)]
+    for key in keys:
+        m.put(str(key), key * 42)
+    print(m.get_size(), m.get_capacity())
+
+    for capacity in range(111, 1000, 117):
+        m.resize_table(capacity)
+
+        m.put('some key', 'some value')
+        result = m.contains_key('some key')
+        m.remove('some key')
+
+        for key in keys:
+            # all inserted keys must be present
+            result &= m.contains_key(str(key))
+            # NOT inserted keys must be absent
+            result &= not m.contains_key(str(key + 1))
+        print(capacity, result, m.get_size(), m.get_capacity(), round(m.table_load(), 2))
 
     # print("\nPDF - get example 1")
     # print("-------------------")
@@ -489,21 +499,21 @@ if __name__ == "__main__":
     # print(m.get_keys_and_values())
     # print("EXPECTED: ", [('2', '20'), ('3', '30'), ('20', '200'), ('4', '40'), ('5', '50')])
 
-    print("\nPDF - find_mode example 1")
-    print("-----------------------------")
-    da = DynamicArray(["apple", "apple", "grape", "melon", "peach"])
-    mode, frequency = find_mode(da)
-    print(f"Input: {da}\nMode : {mode}, Frequency: {frequency}")
-
-    print("\nPDF - find_mode example 2")
-    print("-----------------------------")
-    test_cases = (
-        ["Arch", "Manjaro", "Manjaro", "Mint", "Mint", "Mint", "Ubuntu", "Ubuntu", "Ubuntu"],
-        ["one", "two", "three", "four", "five"],
-        ["2", "4", "2", "6", "8", "4", "1", "3", "4", "5", "7", "3", "3", "2"]
-    )
-
-    for case in test_cases:
-        da = DynamicArray(case)
-        mode, frequency = find_mode(da)
-        print(f"Input: {da}\nMode : {mode}, Frequency: {frequency}\n")
+    # print("\nPDF - find_mode example 1")
+    # print("-----------------------------")
+    # da = DynamicArray(["apple", "apple", "grape", "melon", "peach"])
+    # mode, frequency = find_mode(da)
+    # print(f"Input: {da}\nMode : {mode}, Frequency: {frequency}")
+    #
+    # print("\nPDF - find_mode example 2")
+    # print("-----------------------------")
+    # test_cases = (
+    #     ["Arch", "Manjaro", "Manjaro", "Mint", "Mint", "Mint", "Ubuntu", "Ubuntu", "Ubuntu"],
+    #     ["one", "two", "three", "four", "five"],
+    #     ["2", "4", "2", "6", "8", "4", "1", "3", "4", "5", "7", "3", "3", "2"]
+    # )
+    #
+    # for case in test_cases:
+    #     da = DynamicArray(case)
+    #     mode, frequency = find_mode(da)
+    #     print(f"Input: {da}\nMode : {mode}, Frequency: {frequency}\n")
