@@ -215,6 +215,8 @@ class HashMap:
                     if item.key == key:
                         return True
 
+        return False
+
     def remove(self, key: str) -> None:
         """
         Removes the given key and its associated value from the hash map. If key is not in the hash map,
