@@ -211,14 +211,9 @@ class HashMap:
 
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
-                # node = self._buckets.get_at_index(i).__iter__()
                 for item in self._buckets.get_at_index(i):
                     if item.key == key:
                         return True
-                # for _ in range(self._buckets.get_at_index(i).length()):
-                #     if node.__next__().key == key:
-                #         return True
-        return False
 
     def remove(self, key: str) -> None:
         """
@@ -227,11 +222,15 @@ class HashMap:
         """
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
-                n = self._buckets.get_at_index(i).__iter__()
-                for _ in range(self._buckets.get_at_index(i).length()):
-                    if n.__next__().key == key:
+                # n = self._buckets.get_at_index(i).__iter__()
+                for item in self._buckets.get_at_index(i):
+                    if item.key == key:
                         self._buckets.get_at_index(i).remove(key)
                         self._size -= 1
+                # for _ in range(self._buckets.get_at_index(i).length()):
+                #     if n.__next__().key == key:
+                #         self._buckets.get_at_index(i).remove(key)
+                #         self._size -= 1
 
     def get_keys_and_values(self) -> DynamicArray:
         """
