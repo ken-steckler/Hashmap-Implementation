@@ -177,11 +177,6 @@ class HashMap:
             if item:
                 if item.key == key and not item.is_tombstone:
                     return item.value
-        #
-        # for i in range(self._capacity):
-        #     if self._buckets.get_at_index(i):
-        #         if self._buckets.get_at_index(i).key == key and not self._buckets.get_at_index(i).is_tombstone:
-        #             return self._buckets.get_at_index(i).value
 
         return None
 
@@ -190,11 +185,15 @@ class HashMap:
         Returns True if given key is in the hash map, otherwise returns False.
         An empty hash map does not contain any keys.
         """
-        for i in range(self._capacity):
-            if self._buckets.get_at_index(i):
-                if self._buckets.get_at_index(i).key == key and not self._buckets.get_at_index(i).is_tombstone:
-                    return True
+        for item in self:
+            if item:
+                return item.key == key and not item.is_tombstone
         return False
+
+        # for i in range(self._capacity):
+        #     if self._buckets.get_at_index(i):
+        #         if self._buckets.get_at_index(i).key == key and not self._buckets.get_at_index(i).is_tombstone:
+        #             return True
 
     def remove(self, key: str) -> None:
         """
