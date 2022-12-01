@@ -244,6 +244,7 @@ class HashMap:
                     da.append((node.key, node.value))
         return da
 
+
 def find_mode(da: DynamicArray) -> (DynamicArray, int):
     """
     A standalone function outside of the HashMap class that receives a dynamic array (not guaranteed to be sorted).
