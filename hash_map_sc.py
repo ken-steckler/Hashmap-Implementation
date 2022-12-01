@@ -238,12 +238,9 @@ class HashMap:
 
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
-                # chain_key = self._buckets.get_at_index(i).__iter__()
                 for item in self._buckets.get_at_index(i):
                     da.append((item.key, item.value))
-                # for _ in range(self._buckets.get_at_index(i).length()):
-                #     node = chain_key.__next__()
-                #     da.append((node.key, node.value))
+
         return da
 
 
