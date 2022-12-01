@@ -108,12 +108,17 @@ class HashMap:
             self._size += 1
         else:
             # iterate through the linked list and check if the same key exists. If it does then do nothing
-            node = chain_key.__iter__()
-            for i in range(chain_key.length()):
-                if node.__next__().key == key:
+            # node = chain_key.__iter__()
+            for item in self._buckets.get_at_index(hash_key):
+                if item.key == key:
                     chain_key.remove(key)
-                    chain_key.insert(key, value)
+                    chain_key.insert(item.key, item.value)
                     return
+            # for i in range(chain_key.length()):
+            #     if node.__next__().key == key:
+            #         chain_key.remove(key)
+            #         chain_key.insert(key, value)
+            #         return
             chain_key.insert(key, value)
             self._size += 1
 
@@ -197,14 +202,6 @@ class HashMap:
             for item in self._buckets.get_at_index(hash_key):
                 if item.key == key:
                     return item.value
-            # if chain_key.__iter__().__next__().key == key:
-            #     return chain_key.__iter__().__next__().value
-            # else:
-            #     node = chain_key.__iter__()
-            #     for _ in range(chain_key.length()):
-            #         next = node.__next__()
-            #         if next.key == key:
-            #             return next.value
 
         return None
 
