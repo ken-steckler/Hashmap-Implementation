@@ -191,11 +191,6 @@ class HashMap:
                     return True
         return False
 
-        # for i in range(self._capacity):
-        #     if self._buckets.get_at_index(i):
-        #         if self._buckets.get_at_index(i).key == key and not self._buckets.get_at_index(i).is_tombstone:
-        #             return True
-
     def remove(self, key: str) -> None:
         """
         Removes the given key and its associated value from the hash map.
@@ -203,13 +198,19 @@ class HashMap:
         is raised)
         """
 
-        for i in range(self._capacity):
-            if self._buckets.get_at_index(i):
-                if self._buckets.get_at_index(i).key == key:
-                    # only set tombstone to true if it is not already
-                    if not self._buckets.get_at_index(i).is_tombstone:
-                        self._buckets.get_at_index(i).is_tombstone = True
-                        self._size -= 1
+        for item in self:
+            if item:
+                if item.key == key and not item.is_tombstone:
+                    item.is_tombstone = True
+                    self._size -= 1
+        #
+        # for i in range(self._capacity):
+        #     if self._buckets.get_at_index(i):
+        #         if self._buckets.get_at_index(i).key == key:
+        #             # only set tombstone to true if it is not already
+        #             if not self._buckets.get_at_index(i).is_tombstone:
+        #                 self._buckets.get_at_index(i).is_tombstone = True
+        #                 self._size -= 1
 
     def clear(self) -> None:
         """
