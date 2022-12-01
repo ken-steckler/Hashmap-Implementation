@@ -161,11 +161,6 @@ class HashMap:
             if item:
                 new_table.put(item.key, item.value)
 
-        # for i in range(self._capacity):
-        #     if self._buckets.get_at_index(i):
-        #         pair = self._buckets.get_at_index(i)
-        #         new_table.put(pair.key, pair.value)
-
         # Reassigning new values to self
         self._buckets = new_table._buckets
         self._size = new_table._size

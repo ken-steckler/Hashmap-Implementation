@@ -208,12 +208,16 @@ class HashMap:
         Returns True if given key is in the hash map, otherwise returns False.
         An empty hash map does not contain any keys.
         """
+
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
-                node = self._buckets.get_at_index(i).__iter__()
-                for _ in range(self._buckets.get_at_index(i).length()):
-                    if node.__next__().key == key:
+                # node = self._buckets.get_at_index(i).__iter__()
+                for item in self._buckets.get_at_index(i):
+                    if item.key == key:
                         return True
+                # for _ in range(self._buckets.get_at_index(i).length()):
+                #     if node.__next__().key == key:
+                #         return True
         return False
 
     def remove(self, key: str) -> None:
@@ -383,55 +387,53 @@ if __name__ == "__main__":
     # m.clear()
     # print(m.get_size(), m.get_capacity())
     #
-    print("\nPDF - resize example 1")
-    print("----------------------")
-    m = HashMap(23, hash_function_1)
-    m.put('key1', 10)
-    print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
-    m.resize_table(30)
-    print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
-
-    print("\nGRADESCOPE - resize example 1")
-    print("----------------------")
-    m = HashMap(89, hash_function_2)
-    m.put('key403', 758)
-    m.put('key988', -720)
-    m.put('key49', 134)
-    m.put('key640', -298)
-    m.put('key504', 225)
-    m.put('key353', 570)
-    m.put('key670', 39)
-    m.put('key890', -127)
-    m.put('key504', 225)
-    m.put('key584', 246)
-    m.put('key984', -974)
-
-    m.resize_table(2)
-    print(m)
-
-
-
-    print("\nPDF - resize example 2")
-    print("----------------------")
-    m = HashMap(79, hash_function_2)
-    keys = [i for i in range(1, 1000, 13)]
-    for key in keys:
-        m.put(str(key), key * 42)
-    print(m.get_size(), m.get_capacity())
-
-    for capacity in range(111, 1000, 117):
-        m.resize_table(capacity)
-
-        m.put('some key', 'some value')
-        result = m.contains_key('some key')
-        m.remove('some key')
-
-        for key in keys:
-            # all inserted keys must be present
-            result &= m.contains_key(str(key))
-            # NOT inserted keys must be absent
-            result &= not m.contains_key(str(key + 1))
-        print(capacity, result, m.get_size(), m.get_capacity(), round(m.table_load(), 2))
+    # print("\nPDF - resize example 1")
+    # print("----------------------")
+    # m = HashMap(23, hash_function_1)
+    # m.put('key1', 10)
+    # print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
+    # m.resize_table(30)
+    # print(m.get_size(), m.get_capacity(), m.get('key1'), m.contains_key('key1'))
+    #
+    # print("\nGRADESCOPE - resize example 1")
+    # print("----------------------")
+    # m = HashMap(89, hash_function_2)
+    # m.put('key403', 758)
+    # m.put('key988', -720)
+    # m.put('key49', 134)
+    # m.put('key640', -298)
+    # m.put('key504', 225)
+    # m.put('key353', 570)
+    # m.put('key670', 39)
+    # m.put('key890', -127)
+    # m.put('key504', 225)
+    # m.put('key584', 246)
+    # m.put('key984', -974)
+    #
+    # m.resize_table(2)
+    # print(m)
+    #
+    # print("\nPDF - resize example 2")
+    # print("----------------------")
+    # m = HashMap(79, hash_function_2)
+    # keys = [i for i in range(1, 1000, 13)]
+    # for key in keys:
+    #     m.put(str(key), key * 42)
+    # print(m.get_size(), m.get_capacity())
+    #
+    # for capacity in range(111, 1000, 117):
+    #     m.resize_table(capacity)
+    #
+    #     m.put('some key', 'some value')
+    #     result = m.contains_key('some key')
+    #     m.remove('some key')
+    #
+    #     for key in keys:
+    #         # all inserted keys must be present
+    #         result &= m.contains_key(str(key))
+    #         # NOT inserted keys must be absent
+    #         result &= not m.contains_key(str(key + 1))
+    #     print(capacity, result, m.get_size(), m.get_capacity(), round(m.table_load(), 2))
 
     # print("\nPDF - get example 1")
     # print("-------------------")
@@ -450,20 +452,20 @@ if __name__ == "__main__":
     #     print(i, m.get(str(i)), m.get(str(i)) == i * 10)
     #     print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
     #
-    # print("\nPDF - contains_key example 1")
-    # print("----------------------------")
-    # m = HashMap(53, hash_function_1)
-    # print(m.contains_key('key1'))
-    # m.put('key1', 10)
-    # m.put('key2', 20)
-    # m.put('key3', 30)
-    # print(m.contains_key('key1'))
-    # print(m.contains_key('key4'))
-    # print(m.contains_key('key2'))
-    # print(m.contains_key('key3'))
-    # m.remove('key3')
-    # print(m.contains_key('key3'))
-    # #
+    print("\nPDF - contains_key example 1")
+    print("----------------------------")
+    m = HashMap(53, hash_function_1)
+    print(m.contains_key('key1'))
+    m.put('key1', 10)
+    m.put('key2', 20)
+    m.put('key3', 30)
+    print(m.contains_key('key1'))
+    print(m.contains_key('key4'))
+    print(m.contains_key('key2'))
+    print(m.contains_key('key3'))
+    m.remove('key3')
+    print(m.contains_key('key3'))
+    #
     # print("\nPDF - contains_key example 2")
     # print("----------------------------")
     # m = HashMap(79, hash_function_2)
