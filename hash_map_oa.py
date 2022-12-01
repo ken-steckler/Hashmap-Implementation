@@ -115,6 +115,7 @@ class HashMap:
                     if self._buckets.get_at_index(quad_key).is_tombstone:
                         self._buckets.set_at_index(quad_key, HashEntry(key, value))
                         self._size += 1
+                        self._buckets.get_at_index(quad_key).is_tombstone = False
                     else:
                         self._buckets.set_at_index(quad_key, HashEntry(key, value))
                     return
