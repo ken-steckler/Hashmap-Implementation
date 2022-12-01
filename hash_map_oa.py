@@ -187,7 +187,8 @@ class HashMap:
         """
         for item in self:
             if item:
-                return item.key == key and not item.is_tombstone
+                if item.key == key and not item.is_tombstone:
+                    return True
         return False
 
         # for i in range(self._capacity):
@@ -201,6 +202,7 @@ class HashMap:
         If the key is not in the hash map, the method does nothing (no exceptions
         is raised)
         """
+
         for i in range(self._capacity):
             if self._buckets.get_at_index(i):
                 if self._buckets.get_at_index(i).key == key:
