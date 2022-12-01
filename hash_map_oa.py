@@ -172,7 +172,6 @@ class HashMap:
         Returns the value associated with the given key. If the key is not in the hash
         map, then the method returns None.
         """
-
         for item in self:
             if item:
                 if item.key == key and not item.is_tombstone:
@@ -197,20 +196,11 @@ class HashMap:
         If the key is not in the hash map, the method does nothing (no exceptions
         is raised)
         """
-
         for item in self:
             if item:
                 if item.key == key and not item.is_tombstone:
                     item.is_tombstone = True
                     self._size -= 1
-        #
-        # for i in range(self._capacity):
-        #     if self._buckets.get_at_index(i):
-        #         if self._buckets.get_at_index(i).key == key:
-        #             # only set tombstone to true if it is not already
-        #             if not self._buckets.get_at_index(i).is_tombstone:
-        #                 self._buckets.get_at_index(i).is_tombstone = True
-        #                 self._size -= 1
 
     def clear(self) -> None:
         """
@@ -230,9 +220,13 @@ class HashMap:
         """
         arr = DynamicArray()
 
-        for i in range(self._capacity):
-            if self._buckets.get_at_index(i) and not self._buckets.get_at_index(i).is_tombstone:
-                arr.append((self._buckets.get_at_index(i).key, self._buckets.get_at_index(i).value))
+        for item in self:
+            if item and not item.is_tombstone:
+                arr.append((item.key, item.value))
+        #
+        # for i in range(self._capacity):
+        #     if self._buckets.get_at_index(i) and not self._buckets.get_at_index(i).is_tombstone:
+        #         arr.append((self._buckets.get_at_index(i).key, self._buckets.get_at_index(i).value))
 
         return arr
 
