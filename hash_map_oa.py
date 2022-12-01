@@ -157,10 +157,14 @@ class HashMap:
             new_table._capacity = 2
 
         # be sure to not add size + 1 if rehashing tombstone values
-        for i in range(self._capacity):
-            if self._buckets.get_at_index(i):
-                pair = self._buckets.get_at_index(i)
-                new_table.put(pair.key, pair.value)
+        for item in self:
+            if item:
+                new_table.put(item.key, item.value)
+
+        # for i in range(self._capacity):
+        #     if self._buckets.get_at_index(i):
+        #         pair = self._buckets.get_at_index(i)
+        #         new_table.put(pair.key, pair.value)
 
         # Reassigning new values to self
         self._buckets = new_table._buckets
@@ -223,10 +227,6 @@ class HashMap:
         for item in self:
             if item and not item.is_tombstone:
                 arr.append((item.key, item.value))
-        #
-        # for i in range(self._capacity):
-        #     if self._buckets.get_at_index(i) and not self._buckets.get_at_index(i).is_tombstone:
-        #         arr.append((self._buckets.get_at_index(i).key, self._buckets.get_at_index(i).value))
 
         return arr
 
