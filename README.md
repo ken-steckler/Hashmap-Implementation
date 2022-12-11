@@ -3,7 +3,7 @@
 ## Table of Contents
 1. [Overview](#Overview)
 1. [Chaining](#Chaining)
-1. [Open Addressing](#Open Addressing)
+1. [Open-Addressing](#Open-Addressing)
 1. [Reflection](#Reflection)
 
 ## Overview
@@ -38,7 +38,7 @@ and _next_prime() are used to assist with this.
 - **get_keys_and_values(self) -> DynamicArray**: This method returns a dynamic array where each index contains a tuple of a key/value pair stored in the hash map. The order of they keys in the dynamic array does not matter.
 - **find_mode(arr: DynamicArray) -> (DynamicArray, int)**: A standalone function outside of the HashMap class that receieves a dynamic array. This function returns a tuple containing, in this order, a dynamic array comprising the mode value/s of the array, and an integer that represents the highest frequenncy. If there is more than one value with the highest frequency, all values at that frequency is included in the array being returned (order does not matter). If there is only one mode, the dynamic array will only contain that value. The input array must contain at least one element and all values in the array are strings. Implemented with O(N) time complexity. A separate chaining hash map isused.
 
-## Open Addressing
+## Open-Addressing
 
 ### Specification
 A dynamic array is used to store the hash table and uses open addressing with **quadratic probing** for collision resolution inside the dyanamic array. Key/value pairs are stored in the array.
