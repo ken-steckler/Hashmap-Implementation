@@ -1,4 +1,4 @@
-#Hashmap Implementation in Python - README
+# Hashmap Implementation in Python - README 🔢
 
 ## Table of Contents
 1. [Overview](#Overview)
