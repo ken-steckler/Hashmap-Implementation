@@ -1,9 +1,5 @@
-# Name: Ken Steckler
-# OSU Email: stecklek@oregonstate.edu
-# Course: CS261 - Data Structures
-# Assignment: Assignment 6
-# Due Date: December 2, 2022
 # Description: Hash Map Chaining Implementation
+# Uses a Dynamic Array and Linked List as underlying Data Structure
 
 
 from a6_include import (DynamicArray, LinkedList,
