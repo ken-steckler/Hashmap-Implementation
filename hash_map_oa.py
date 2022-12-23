@@ -1,9 +1,5 @@
-# Name: Ken Steckler
-# OSU Email: stecklek@oregonstate.edu
-# Course: CS261 - Data Structures
-# Assignment: Assignment 6
-# Due Date: December 2, 2022
 # Description: Hash Map Open Addressing Implementation
+# Uses Dynamic Array data structure with quadratic probing
 
 from a6_include import (DynamicArray, DynamicArrayException, HashEntry,
                         hash_function_1, hash_function_2)
